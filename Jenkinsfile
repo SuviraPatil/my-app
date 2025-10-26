@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-credss')
         IMAGE_NAME = "suivra1008/myapp"
     }
 
@@ -31,7 +31,7 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    withDockerRegistry([ credentialsId: 'dockerhub-creds', url: 'https://docker.io' ]) {
+                    withDockerRegistry([ credentialsId: 'dockerhub-credss', url: 'https://docker.io' ]) {
                         bat "docker push ${IMAGE_NAME}:latest"
                     }
                 }
