@@ -41,3 +41,10 @@
                         <manifest>
                             <mainClass>com.example.App</mainClass>
                         </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>
