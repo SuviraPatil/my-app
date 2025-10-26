@@ -2,12 +2,12 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "suvira1008/myapp:latest" // replace with your Docker Hub repo
-        DOCKER_REGISTRY = "docker.io"
-        DOCKER_CREDENTIALS = "dockerhub-creds" // Jenkins credentials ID
+        DOCKERHUB_CREDENTIALS = credentials('dockerhub-creds')
+        IMAGE_NAME = "suivra1008/myapp"
     }
 
     stages {
+
         stage('Checkout') {
             steps {
                 git branch: 'main', url: 'https://github.com/SuviraPatil/my-app.git'
@@ -23,7 +23,7 @@ pipeline {
         stage('Build Docker Image') {
             steps {
                 script {
-                    docker.build(DOCKER_IMAGE)
+                    bat "docker build -t ${IMAGE_NAME}:latest ."
                 }
             }
         }
@@ -31,8 +31,8 @@ pipeline {
         stage('Push Docker Image') {
             steps {
                 script {
-                    docker.withRegistry("https://${DOCKER_REGISTRY}", "${DOCKER_CREDENTIALS}") {
-                        docker.image(DOCKER_IMAGE).push()
+                    withDockerRegistry([ credentialsId: 'dockerhub-creds', url: 'https://docker.io' ]) {
+                        bat "docker push ${IMAGE_NAME}:latest"
                     }
                 }
             }
@@ -41,10 +41,10 @@ pipeline {
 
     post {
         success {
-            echo "Docker image built and pushed successfully!"
+            echo '✅ Build and push completed successfully!'
         }
         failure {
-            echo "Build failed."
+            echo '❌ Build failed.'
         }
     }
 }
